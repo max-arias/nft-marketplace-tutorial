@@ -1,4 +1,3 @@
-/* pages/my-assets.js */
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -12,16 +11,21 @@ import NFT from "../artifacts/contracts/NFT.sol/NFT.json";
 export default function MyAssets() {
   const [nfts, setNfts] = useState([]);
   const [loadingState, setLoadingState] = useState("not-loaded");
+
+  // Fetch NFTs
   useEffect(() => {
     loadNFTs();
   }, []);
+
   async function loadNFTs() {
     const web3Modal = new Web3Modal({
       network: "mainnet",
       cacheProvider: true,
     });
+    // Connect user
     const connection = await web3Modal.connect();
     const provider = new ethers.providers.Web3Provider(connection);
+    // Get signer to sign tx
     const signer = provider.getSigner();
 
     const marketContract = new ethers.Contract(
@@ -29,9 +33,13 @@ export default function MyAssets() {
       Market.abi,
       signer
     );
+
     const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider);
+
+    // Fetch NFT from contract
     const data = await marketContract.fetchMyNFTs();
 
+    // Fetch NFT data
     const items = await Promise.all(
       data.map(async (i) => {
         const tokenUri = await tokenContract.tokenURI(i.tokenId);
@@ -47,11 +55,15 @@ export default function MyAssets() {
         return item;
       })
     );
+
     setNfts(items);
     setLoadingState("loaded");
   }
-  if (loadingState === "loaded" && !nfts.length)
+
+  if (loadingState === "loaded" && !nfts.length) {
     return <h1 className="py-10 px-20 text-3xl">No assets owned</h1>;
+  }
+
   return (
     <div className="flex justify-center">
       <div className="p-4">

@@ -12,9 +12,11 @@ import Market from "../artifacts/contracts/Market.sol/NFTMarket.json";
 export default function Home() {
   const [nfts, setNfts] = useState([]);
   const [loadingState, setLoadingState] = useState("not-loaded");
+
   useEffect(() => {
     loadNFTs();
   }, []);
+
   async function loadNFTs() {
     /* create a generic provider and query for unsold market items */
     const provider = new ethers.providers.JsonRpcProvider();
@@ -47,9 +49,11 @@ export default function Home() {
         return item;
       })
     );
+
     setNfts(items);
     setLoadingState("loaded");
   }
+
   async function buyNft(nft) {
     /* needs the user to sign the transaction, so will use Web3Provider and sign it */
     const web3Modal = new Web3Modal();

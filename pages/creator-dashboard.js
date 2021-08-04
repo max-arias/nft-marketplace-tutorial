@@ -13,9 +13,11 @@ export default function CreatorDashboard() {
   const [nfts, setNfts] = useState([]);
   const [sold, setSold] = useState([]);
   const [loadingState, setLoadingState] = useState("not-loaded");
+
   useEffect(() => {
     loadNFTs();
   }, []);
+
   async function loadNFTs() {
     const web3Modal = new Web3Modal({
       network: "mainnet",
@@ -31,6 +33,7 @@ export default function CreatorDashboard() {
       signer
     );
     const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider);
+
     const data = await marketContract.fetchItemsCreated();
 
     const items = await Promise.all(
@@ -49,6 +52,7 @@ export default function CreatorDashboard() {
         return item;
       })
     );
+
     /* create a filtered array of items that have been sold */
     const soldItems = items.filter((i) => i.sold);
     setSold(soldItems);

@@ -21,6 +21,7 @@ export default function CreateItem() {
   });
   const router = useRouter();
 
+  // Upload file to ipfs
   async function onChange(e) {
     const file = e.target.files[0];
     try {
@@ -75,6 +76,7 @@ export default function CreateItem() {
     transaction = await contract.createMarketItem(nftaddress, tokenId, price, {
       value: listingPrice,
     });
+
     await transaction.wait();
     router.push("/");
   }
